@@ -19,6 +19,14 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 10)
 scene.add(camera)
 
+const sphereGeometry = new THREE.SphereGeometry(3, 30, 30)
+// const material = new THREE.MeshBasicMaterial({
+//   color: 0xff0000,
+//   wireframe: true,
+// })
+// const mesh = new THREE.Mesh(sphereGeometry, material)
+// scene.add(mesh)
+
 const pointsMaterial = new THREE.PointsMaterial()
 pointsMaterial.size = 0.1
 pointsMaterial.color.set(0xfff000)

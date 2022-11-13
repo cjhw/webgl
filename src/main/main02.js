@@ -19,29 +19,41 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 10)
 scene.add(camera)
 
-const sphereGeometry = new THREE.SphereGeometry(3, 30, 30)
-// const material = new THREE.MeshBasicMaterial({
-//   color: 0xff0000,
-//   wireframe: true,
-// })
-// const mesh = new THREE.Mesh(sphereGeometry, material)
-// scene.add(mesh)
+const particlesGeometry = new THREE.BufferGeometry()
+const count = 5000
+
+const positions = new Float32Array(count * 3)
+const colors = new Float32Array(count * 3)
+
+for (let i = 0; i < count * 3; i++) {
+  positions[i] = (Math.random() - 0.5) * 100
+  colors[i] = Math.random()
+}
+
+particlesGeometry.setAttribute(
+  'position',
+  new THREE.BufferAttribute(positions, 3)
+)
+
+particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+console.log(particlesGeometry)
 
 const pointsMaterial = new THREE.PointsMaterial()
-pointsMaterial.size = 0.1
+pointsMaterial.size = 0.5
 pointsMaterial.color.set(0xfff000)
 pointsMaterial.sizeAttenuation = true
 
 const textureLoader = new THREE.TextureLoader()
-const texture = textureLoader.load('./textures/particles/2.png')
+const texture = textureLoader.load('./textures/particles/1.png')
 
 pointsMaterial.map = texture
 pointsMaterial.alphaMap = texture
 pointsMaterial.transparent = true
 pointsMaterial.depthWrite = false
 pointsMaterial.blending = THREE.AdditiveBlending
+pointsMaterial.vertexColors = true
 
-const points = new THREE.Points(sphereGeometry, pointsMaterial)
+const points = new THREE.Points(particlesGeometry, pointsMaterial)
 scene.add(points)
 
 const renderer = new THREE.WebGLRenderer()
