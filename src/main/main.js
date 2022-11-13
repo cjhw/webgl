@@ -14,96 +14,24 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 10)
 scene.add(camera)
 
-var div = document.createElement('div')
-div.style.width = '200px'
-div.style.height = '200px'
-div.style.position = 'fixed'
-div.style.right = 0
-div.style.top = 0
-div.style.color = '#fff'
-document.body.appendChild(div)
+const cubeTextureLoader = new THREE.CubeTextureLoader()
+const envMapTexture = cubeTextureLoader.load([
+  'textures/environmentMaps/1/px.jpg',
+  'textures/environmentMaps/1/nx.jpg',
+  'textures/environmentMaps/1/py.jpg',
+  'textures/environmentMaps/1/ny.jpg',
+  'textures/environmentMaps/1/pz.jpg',
+  'textures/environmentMaps/1/nz.jpg',
+])
 
-let event = {}
-// 单张纹理图的加载
-event.onLoad = function () {
-  console.log('图片加载完成')
-}
-event.onProgress = function (url, num, total) {
-  console.log('图片加载完成:', url)
-  console.log('图片加载进度:', num)
-  console.log('图片总数:', total)
-  let value = ((num / total) * 100).toFixed(2) + '%'
-  console.log('加载进度的百分比：', value)
-  div.innerHTML = value
-}
-event.onError = function (e) {
-  console.log('图片加载出现错误')
-  console.log(e)
-}
-
-const loadingManager = new THREE.LoadingManager(
-  event.onLoad,
-  event.onProgress,
-  event.onError
-)
-
-const textureLoader = new THREE.TextureLoader(loadingManager)
-const doorColorTexture = textureLoader.load(
-  './textures/door/color.jpg'
-  // event.onLoad,
-  // event.onProgress,
-  // event.onError
-)
-const doorAplhaTexture = textureLoader.load('./textures/door/alpha.jpg')
-const doorAoTexture = textureLoader.load('./textures/door/ambientOcclusion.jpg')
-const doorHeightTexture = textureLoader.load('./textures/door/height.jpg')
-const roughnessTexture = textureLoader.load('./textures/door/roughness.jpg')
-const metalnessTexture = textureLoader.load('./textures/door/metalness.jpg')
-const normalTexture = textureLoader.load('./textures/door/normal.jpg')
-// doorColorTexture.offset.set(0.5, 0.5)
-// doorColorTexture.center.set(0.5, 0.5)
-// doorColorTexture.rotation = Math.PI / 4
-// doorColorTexture.repeat.set(2, 3)
-// doorColorTexture.wrapS = THREE.RepeatWrapping
-// doorColorTexture.wrapT = THREE.RepeatWrapping
-
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100)
+const sphereGeometry = new THREE.SphereGeometry(1, 20, 20)
 const material = new THREE.MeshStandardMaterial({
-  color: '#ffff00',
-  map: doorColorTexture,
-  alphaMap: doorAplhaTexture,
-  transparent: true,
-  side: THREE.DoubleSide,
-  aoMap: doorAoTexture,
-  displacementMap: doorHeightTexture,
-  displacementScale: 0.1,
-  roughness: 1,
-  roughnessMap: roughnessTexture,
-  metalness: 1,
-  metalnessMap: metalnessTexture,
-  normalMap: normalTexture,
+  metalness: 0.7,
+  roughness: 0.1,
+  envMap: envMapTexture,
 })
-
-const cube = new THREE.Mesh(cubeGeometry, material)
-
-scene.add(cube)
-
-console.log(cubeGeometry)
-cubeGeometry.setAttribute(
-  'uv2',
-  new THREE.BufferAttribute(cubeGeometry.attributes.uv.array, 2)
-)
-
-const planeGeometry = new THREE.PlaneGeometry(1, 1, 200, 200)
-const plane = new THREE.Mesh(planeGeometry, material)
-
-plane.position.set(2, 0, 0)
-scene.add(plane)
-
-planeGeometry.setAttribute(
-  'uv2',
-  new THREE.BufferAttribute(planeGeometry.attributes.uv.array, 2)
-)
+const sphere = new THREE.Mesh(sphereGeometry, material)
+scene.add(sphere)
 
 const light = new THREE.AmbientLight(0xffffff, 0.5)
 scene.add(light)
