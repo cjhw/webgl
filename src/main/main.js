@@ -16,76 +16,57 @@ const camera = new THREE.PerspectiveCamera(
   40
 )
 
-const textureLoader = new THREE.TextureLoader()
-const particlesTexture = textureLoader.load('./textures/particles/1.png')
-
 camera.position.set(0, 0, 40)
 scene.add(camera)
 
-const params = {
-  count: 100000,
-  size: 0.1,
-  radius: 5,
-  branch: 12,
-  color: '#ff6030',
-  rotateScale: 0.3,
-  endColor: '#1d3984',
-}
+const cubeGeometry = new THREE.BoxBufferGeometry(1, 1, 1)
+const material = new THREE.MeshBasicMaterial({
+  wireframe: true,
+})
+const redMaterial = new THREE.MeshBasicMaterial({
+  color: '#ff0000',
+})
 
-let geometry = null
-let material = null
-let points = null
-const centerColor = new THREE.Color(params.color)
-const endColor = new THREE.Color(params.endColor)
-const generateGalaxy = () => {
-  geometry = new THREE.BufferGeometry()
-  const positions = new Float32Array(params.count * 3)
-  const colors = new Float32Array(params.count * 3)
-  for (let i = 0; i < params.count; i++) {
-    const branchAngel = (i % params.branch) * ((2 * Math.PI) / params.branch)
-    const distance = Math.random() * params.radius * Math.pow(Math.random(), 3)
-    const current = i * 3
-
-    const randomX =
-      (Math.pow(Math.random() * 2 - 1, 3) * (params.radius - distance)) / 5
-    const randomY =
-      (Math.pow(Math.random() * 2 - 1, 3) * (params.radius - distance)) / 5
-    const randomZ =
-      (Math.pow(Math.random() * 2 - 1, 3) * (params.radius - distance)) / 5
-
-    positions[current] =
-      Math.cos(branchAngel + distance * params.rotateScale) * distance + randomX
-    positions[current + 1] = 0 + randomY
-    positions[current + 2] =
-      Math.sin(branchAngel + distance * params.rotateScale) * distance + randomZ
-
-    // 混合颜色，形成渐变色
-    const mixColor = centerColor.clone()
-    mixColor.lerp(endColor, distance / params.radius)
-    colors[current] = mixColor.r
-    colors[current + 1] = mixColor.g
-    colors[current + 2] = mixColor.b
+// 1000立方体
+let cubeArr = []
+for (let i = -5; i < 5; i++) {
+  for (let j = -5; j < 5; j++) {
+    for (let z = -5; z < 5; z++) {
+      const cube = new THREE.Mesh(cubeGeometry, material)
+      cube.position.set(i, j, z)
+      scene.add(cube)
+      cubeArr.push(cube)
+    }
   }
-
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-  material = new THREE.PointsMaterial({
-    // color: new THREE.Color(params.color),
-    size: params.size,
-    sizeAttenuation: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-    map: particlesTexture,
-    alphaMap: particlesTexture,
-    transparent: true,
-    vertexColors: true,
-  })
-
-  points = new THREE.Points(geometry, material)
-  scene.add(points)
 }
 
-generateGalaxy()
+const raycaster = new THREE.Raycaster()
+
+const mouse = new THREE.Vector2()
+
+// window.addEventListener('mousemove', (event) => {
+//   mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+//   mouse.y = -((event.clientY / window.innerHeight) * 2 - 1)
+//   raycaster.setFromCamera(mouse, camera)
+//   let result = raycaster.intersectObjects(cubeArr)
+//   // result[0].object.material = redMaterial
+//   result.forEach((item) => {
+//     item.object.material = redMaterial
+//   })
+// })
+
+window.addEventListener('click', (event) => {
+  //   console.log(event);
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+  mouse.y = -((event.clientY / window.innerHeight) * 2 - 1)
+  raycaster.setFromCamera(mouse, camera)
+  let result = raycaster.intersectObjects(cubeArr)
+  //   console.log(result);
+  //   result[0].object.material = redMaterial;
+  result.forEach((item) => {
+    item.object.material = redMaterial
+  })
+})
 
 const renderer = new THREE.WebGLRenderer()
 
