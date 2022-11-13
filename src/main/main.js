@@ -3,13 +3,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import gsap from 'gsap'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
 
-const rgbeLoader = new RGBELoader()
-rgbeLoader.loadAsync('textures/hdr/002.hdr').then((texture) => {
-  texture.mapping = THREE.EquirectangularReflectionMapping
-  scene.background = texture
-  scene.environment = texture
-})
-
+// 目标：灯光与阴影
+// 灯光阴影
+// 1、材质要满足能够对光照有反应
+// 2、设置渲染器开启阴影的计算 renderer.shadowMap.enabled = true;
+// 3、设置光照投射阴影 directionalLight.castShadow = true;
+// 4、设置物体投射阴影 sphere.castShadow = true;
+// 5、设置物体接收阴影 plane.receiveShadow = true;
 const scene = new THREE.Scene()
 
 const camera = new THREE.PerspectiveCamera(
@@ -22,38 +22,35 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 10)
 scene.add(camera)
 
-const cubeTextureLoader = new THREE.CubeTextureLoader()
-const envMapTexture = cubeTextureLoader.load([
-  'textures/environmentMaps/1/px.jpg',
-  'textures/environmentMaps/1/nx.jpg',
-  'textures/environmentMaps/1/py.jpg',
-  'textures/environmentMaps/1/ny.jpg',
-  'textures/environmentMaps/1/pz.jpg',
-  'textures/environmentMaps/1/nz.jpg',
-])
-
 const sphereGeometry = new THREE.SphereGeometry(1, 20, 20)
 const material = new THREE.MeshStandardMaterial({
-  metalness: 0.7,
-  roughness: 0.1,
   // envMap: envMapTexture,
 })
 const sphere = new THREE.Mesh(sphereGeometry, material)
+// 投射阴影
+sphere.castShadow = true
 scene.add(sphere)
 
-scene.background = envMapTexture
-
-scene.environment = envMapTexture
+const planeGeometry = new THREE.PlaneBufferGeometry(10, 10)
+const plane = new THREE.Mesh(planeGeometry, material)
+plane.position.set(0, -1, 0)
+plane.rotation.x = -Math.PI / 2
+// 接收阴影
+plane.receiveShadow = true
+scene.add(plane)
 
 const light = new THREE.AmbientLight(0xffffff, 0.5)
 scene.add(light)
-const directionLight = new THREE.DirectionalLight(0xffffff, 0.5)
-directionLight.position.set(10, 10, 10)
-scene.add(directionLight)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
+directionalLight.position.set(10, 10, 10)
+directionalLight.castShadow = true
+scene.add(directionalLight)
 
 const renderer = new THREE.WebGLRenderer()
 
 renderer.setSize(window.innerWidth, window.innerHeight)
+// 开启场景中的阴影贴图
+renderer.shadowMap.enabled = true
 
 document.body.appendChild(renderer.domElement)
 
