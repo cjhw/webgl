@@ -18,7 +18,7 @@ const textureLoader = new THREE.TextureLoader()
 const doorColorTexture = textureLoader.load('./textures/door/color.jpg')
 const doorAplhaTexture = textureLoader.load('./textures/door/alpha.jpg')
 const doorAoTexture = textureLoader.load('./textures/door/ambientOcclusion.jpg')
-const doorHeightTexture = textureLoader.load('./textures/door/height.jpg')
+
 // doorColorTexture.offset.set(0.5, 0.5)
 // doorColorTexture.center.set(0.5, 0.5)
 // doorColorTexture.rotation = Math.PI / 4
@@ -26,7 +26,7 @@ const doorHeightTexture = textureLoader.load('./textures/door/height.jpg')
 // doorColorTexture.wrapS = THREE.RepeatWrapping
 // doorColorTexture.wrapT = THREE.RepeatWrapping
 
-const cubeGeometry = new THREE.BoxGeometry(1, 1, 1, 100, 100, 100)
+const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
 const material = new THREE.MeshStandardMaterial({
   color: '#ffff00',
   map: doorColorTexture,
@@ -34,8 +34,6 @@ const material = new THREE.MeshStandardMaterial({
   transparent: true,
   side: THREE.DoubleSide,
   aoMap: doorAoTexture,
-  displacementMap: doorHeightTexture,
-  displacementScale: 0.1,
 })
 
 const cube = new THREE.Mesh(cubeGeometry, material)
@@ -48,10 +46,10 @@ cubeGeometry.setAttribute(
   new THREE.BufferAttribute(cubeGeometry.attributes.uv.array, 2)
 )
 
-const planeGeometry = new THREE.PlaneGeometry(1, 1, 200, 200)
+const planeGeometry = new THREE.PlaneGeometry(1, 1)
 const plane = new THREE.Mesh(planeGeometry, material)
 
-plane.position.set(2, 0, 0)
+plane.position.set(3, 0, 0)
 scene.add(plane)
 
 planeGeometry.setAttribute(
