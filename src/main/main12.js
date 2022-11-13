@@ -34,7 +34,7 @@ const sphere = new THREE.Mesh(sphereGeometry, material)
 sphere.castShadow = true
 scene.add(sphere)
 
-const planeGeometry = new THREE.PlaneBufferGeometry(50, 50)
+const planeGeometry = new THREE.PlaneBufferGeometry(10, 10)
 const plane = new THREE.Mesh(planeGeometry, material)
 plane.position.set(0, -1, 0)
 plane.rotation.x = -Math.PI / 2
@@ -44,42 +44,39 @@ scene.add(plane)
 
 const light = new THREE.AmbientLight(0xffffff, 0.5)
 scene.add(light)
-
-const spotLight = new THREE.SpotLight(0xffffff, 1)
-spotLight.position.set(5, 5, 5)
-spotLight.castShadow = true
-spotLight.intensity = 2
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
+directionalLight.position.set(5, 5, 5)
+directionalLight.castShadow = true
 
 // 设置阴影贴图模糊度
-spotLight.shadow.radius = 20
+directionalLight.shadow.radius = 20
 // 设置阴影贴图的分辨率
-spotLight.shadow.mapSize.set(512, 512)
+directionalLight.shadow.mapSize.set(4096, 4096)
 
-// console.log(directionalLight.shadow);
-spotLight.target = sphere
-spotLight.angle = Math.PI / 6
-spotLight.distance = 0
-spotLight.penumbra = 0
-spotLight.decay = 0
+// 设置平行光投射相机的属性
+directionalLight.shadow.camera.near = 0.5
+directionalLight.shadow.camera.far = 500
+directionalLight.shadow.camera.top = 5
+directionalLight.shadow.camera.bottom = -5
+directionalLight.shadow.camera.left = -5
+directionalLight.shadow.camera.right = 5
 
-gui.add(sphere.position, 'x').min(-5).max(5).step(0.1)
+scene.add(directionalLight)
+
 gui
-  .add(spotLight, 'angle')
+  .add(directionalLight.shadow.camera, 'near')
   .min(0)
-  .max(Math.PI / 2)
-  .step(0.01)
-gui.add(spotLight, 'distance').min(0).max(10).step(0.01)
-gui.add(spotLight, 'penumbra').min(0).max(1).step(0.01)
-gui.add(spotLight, 'decay').min(0).max(5).step(0.01)
-
-scene.add(spotLight)
+  .max(10)
+  .step(0.1)
+  .onChange(() => {
+    directionalLight.shadow.camera.updateProjectionMatrix()
+  })
 
 const renderer = new THREE.WebGLRenderer()
 
 renderer.setSize(window.innerWidth, window.innerHeight)
 // 开启场景中的阴影贴图
 renderer.shadowMap.enabled = true
-renderer.physicallyCorrectLights = true
 
 document.body.appendChild(renderer.domElement)
 
