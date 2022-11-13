@@ -1,6 +1,14 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import gsap from 'gsap'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
+
+const rgbeLoader = new RGBELoader()
+rgbeLoader.loadAsync('textures/hdr/002.hdr').then((texture) => {
+  texture.mapping = THREE.EquirectangularReflectionMapping
+  scene.background = texture
+  scene.environment = texture
+})
 
 const scene = new THREE.Scene()
 
@@ -28,10 +36,14 @@ const sphereGeometry = new THREE.SphereGeometry(1, 20, 20)
 const material = new THREE.MeshStandardMaterial({
   metalness: 0.7,
   roughness: 0.1,
-  envMap: envMapTexture,
+  // envMap: envMapTexture,
 })
 const sphere = new THREE.Mesh(sphereGeometry, material)
 scene.add(sphere)
+
+scene.background = envMapTexture
+
+scene.environment = envMapTexture
 
 const light = new THREE.AmbientLight(0xffffff, 0.5)
 scene.add(light)
