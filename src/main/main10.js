@@ -14,46 +14,8 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 10)
 scene.add(camera)
 
-var div = document.createElement('div')
-div.style.width = '200px'
-div.style.height = '200px'
-div.style.position = 'fixed'
-div.style.right = 0
-div.style.top = 0
-div.style.color = '#fff'
-document.body.appendChild(div)
-
-let event = {}
-// 单张纹理图的加载
-event.onLoad = function () {
-  console.log('图片加载完成')
-}
-event.onProgress = function (url, num, total) {
-  console.log('图片加载完成:', url)
-  console.log('图片加载进度:', num)
-  console.log('图片总数:', total)
-  let value = ((num / total) * 100).toFixed(2) + '%'
-  console.log('加载进度的百分比：', value)
-  div.innerHTML = value
-}
-event.onError = function (e) {
-  console.log('图片加载出现错误')
-  console.log(e)
-}
-
-const loadingManager = new THREE.LoadingManager(
-  event.onLoad,
-  event.onProgress,
-  event.onError
-)
-
-const textureLoader = new THREE.TextureLoader(loadingManager)
-const doorColorTexture = textureLoader.load(
-  './textures/door/color.jpg'
-  // event.onLoad,
-  // event.onProgress,
-  // event.onError
-)
+const textureLoader = new THREE.TextureLoader()
+const doorColorTexture = textureLoader.load('./textures/door/color.jpg')
 const doorAplhaTexture = textureLoader.load('./textures/door/alpha.jpg')
 const doorAoTexture = textureLoader.load('./textures/door/ambientOcclusion.jpg')
 const doorHeightTexture = textureLoader.load('./textures/door/height.jpg')
