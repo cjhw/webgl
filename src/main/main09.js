@@ -19,9 +19,6 @@ const doorColorTexture = textureLoader.load('./textures/door/color.jpg')
 const doorAplhaTexture = textureLoader.load('./textures/door/alpha.jpg')
 const doorAoTexture = textureLoader.load('./textures/door/ambientOcclusion.jpg')
 const doorHeightTexture = textureLoader.load('./textures/door/height.jpg')
-const roughnessTexture = textureLoader.load('./textures/door/roughness.jpg')
-const metalnessTexture = textureLoader.load('./textures/door/metalness.jpg')
-const normalTexture = textureLoader.load('./textures/door/normal.jpg')
 // doorColorTexture.offset.set(0.5, 0.5)
 // doorColorTexture.center.set(0.5, 0.5)
 // doorColorTexture.rotation = Math.PI / 4
@@ -39,11 +36,6 @@ const material = new THREE.MeshStandardMaterial({
   aoMap: doorAoTexture,
   displacementMap: doorHeightTexture,
   displacementScale: 0.1,
-  roughness: 1,
-  roughnessMap: roughnessTexture,
-  metalness: 1,
-  metalnessMap: metalnessTexture,
-  normalMap: normalTexture,
 })
 
 const cube = new THREE.Mesh(cubeGeometry, material)
