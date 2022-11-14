@@ -42,7 +42,7 @@ scene.add(axesHelper)
 
 // 创建纹理加载器对象
 const textureLoader = new THREE.TextureLoader()
-const texture = textureLoader.load('./texture/da.jpeg')
+const texture = textureLoader.load('./textures/ca.jpeg')
 const params = {
   uFrequency: 10,
   uScale: 0.1,
@@ -54,6 +54,14 @@ const rawShaderMaterial = new THREE.RawShaderMaterial({
   vertexShader: basicVertexShader,
   fragmentShader: basicFragmentShader,
   side: THREE.DoubleSide,
+  uniforms: {
+    uTime: {
+      value: 0,
+    },
+    uTexture: {
+      value: texture,
+    },
+  },
 })
 
 // 创建平面
@@ -101,6 +109,7 @@ controls.enableDamping = true
 const clock = new THREE.Clock()
 function animate(t) {
   const elapsedTime = clock.getElapsedTime()
+  rawShaderMaterial.uniforms.uTime.value = elapsedTime
   //   console.log(elapsedTime);
   requestAnimationFrame(animate)
   // 使用渲染器渲染相机看这个场景的内容渲染出来

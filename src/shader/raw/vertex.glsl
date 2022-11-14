@@ -7,6 +7,8 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+uniform float uTime;
+
 varying vec2 vUv;
 
 varying float vElevation;
@@ -18,8 +20,8 @@ void main(){
     // modelPosition.y += 1.0;
     // modelPosition.z += modelPosition.x;
 
-    modelPosition.z = sin(modelPosition.x*10.0)*0.1;
-    modelPosition.z += sin(modelPosition.y*10.0)*0.1;
+    modelPosition.z = sin((modelPosition.x+uTime)*10.0)*0.1;
+    modelPosition.z += sin((modelPosition.y+uTime)*10.0)*0.1;
 
     vElevation = modelPosition.z;
     gl_Position = projectionMatrix * viewMatrix * modelPosition;
