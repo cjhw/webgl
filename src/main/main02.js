@@ -35,7 +35,7 @@ sphere.castShadow = true
 scene.add(sphere)
 
 const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(20, 20),
+  new THREE.PlaneBufferGeometry(20, 20),
   new THREE.MeshStandardMaterial()
 )
 
@@ -63,22 +63,6 @@ const sphereBody = new CANNON.Body({
   //   物体材质
   material: sphereWorldMaterial,
 })
-
-const hitSound = new Audio('assets/metalHit.mp3')
-
-function HitEvent(e) {
-  // 获取碰撞的强度
-  //   console.log("hit", e);
-  const impactStrength = e.contact.getImpactVelocityAlongNormal()
-  console.log(impactStrength)
-  if (impactStrength > 2) {
-    //   重新从零开始播放
-    hitSound.currentTime = 0
-    hitSound.play()
-  }
-}
-
-sphereBody.addEventListener('collide', HitEvent)
 
 // 将物体添加至物理世界
 world.addBody(sphereBody)
