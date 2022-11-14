@@ -5,9 +5,9 @@ import gsap from 'gsap'
 import * as dat from 'dat.gui'
 
 // 顶点着色器
-import basicVertexShader from '../shader/raw/vertex.glsl'
+import basicVertexShader from '../shader/basic/vertex.glsl'
 // 片元着色器
-import basicFragmentShader from '../shader/raw/fragment.glsl'
+import basicFragmentShader from '../shader/basic/fragment.glsl'
 
 // 目标：认识shader
 
@@ -50,7 +50,7 @@ const params = {
 
 // const material = new THREE.MeshBasicMaterial({ color: "#00ff00" });
 // 创建着色器材质
-const rawShaderMaterial = new THREE.RawShaderMaterial({
+const shaderMaterial = new THREE.ShaderMaterial({
   vertexShader: basicVertexShader,
   fragmentShader: basicFragmentShader,
 })
@@ -58,7 +58,7 @@ const rawShaderMaterial = new THREE.RawShaderMaterial({
 // 创建平面
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(1, 1, 64, 64),
-  rawShaderMaterial
+  shaderMaterial
 )
 
 console.log(floor)
