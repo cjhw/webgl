@@ -53,6 +53,7 @@ const params = {
 const rawShaderMaterial = new THREE.RawShaderMaterial({
   vertexShader: basicVertexShader,
   fragmentShader: basicFragmentShader,
+  side: THREE.DoubleSide,
 })
 
 // 创建平面
