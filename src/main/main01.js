@@ -67,15 +67,6 @@ const sphereBody = new CANNON.Body({
 // 将物体添加至物理世界
 world.addBody(sphereBody)
 
-const floorShape = new CANNON.Plane()
-const floorBody = new CANNON.Body()
-// 质量为0碰撞保持不动
-floorBody.mass = 0
-floorBody.addShape(floorShape)
-floorBody.position.set(0, -5, 0)
-floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2)
-world.addBody(floorBody)
-
 //添加环境光和平行光
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
 scene.add(ambientLight)
@@ -113,7 +104,7 @@ function render() {
   //   let time = clock.getElapsedTime();
   let deltaTime = clock.getDelta()
   // 更新物理引擎里世界的物体
-  world.step(1 / 60, deltaTime)
+  world.step(1 / 120, deltaTime)
 
   sphere.position.copy(sphereBody.position)
 
