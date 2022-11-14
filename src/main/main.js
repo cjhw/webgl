@@ -85,12 +85,27 @@ world.addBody(sphereBody)
 
 const floorShape = new CANNON.Plane()
 const floorBody = new CANNON.Body()
+const floorMaterial = new CANNON.Material('floor')
 // 质量为0碰撞保持不动
+floorBody.material = floorMaterial
 floorBody.mass = 0
 floorBody.addShape(floorShape)
 floorBody.position.set(0, -5, 0)
 floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2)
 world.addBody(floorBody)
+
+const defaultContactMaterial = new CANNON.ContactMaterial(
+  sphereMaterial,
+  floorMaterial,
+  {
+    // 摩擦力
+    friction: 0.1,
+    // 弹性
+    restitution: 0.7,
+  }
+)
+
+world.addContactMaterial(defaultContactMaterial)
 
 //添加环境光和平行光
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
