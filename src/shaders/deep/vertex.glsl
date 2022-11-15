@@ -1,0 +1,20 @@
+precision lowp float;
+attribute vec3 position;
+attribute vec2 uv;
+
+
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
+uniform float uTime;
+
+varying vec2 vUv;
+
+varying float vElevation;
+
+void main(){
+    vUv = uv;
+    vec4 modelPosition = modelMatrix * vec4(position,1.0);
+    gl_Position = projectionMatrix * viewMatrix * modelPosition;
+}

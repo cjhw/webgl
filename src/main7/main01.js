@@ -5,9 +5,9 @@ import gsap from 'gsap'
 import * as dat from 'dat.gui'
 
 // 顶点着色器
-import deepVertexShader from '../shaders/deep/vertex.glsl'
+import basicVertexShader from '../shaders/basic/vertex.glsl'
 // 片元着色器
-import deepFragmentShader from '../shaders/deep/fragment.glsl'
+import basicFragmentShader from '../shaders/basic/fragment.glsl'
 
 // 目标：认识shader
 
@@ -42,7 +42,7 @@ scene.add(axesHelper)
 
 // 创建纹理加载器对象
 const textureLoader = new THREE.TextureLoader()
-const texture = textureLoader.load('./textures/ca.jpeg')
+const texture = textureLoader.load('./texture/da.jpeg')
 const params = {
   uFrequency: 10,
   uScale: 0.1,
@@ -50,24 +50,23 @@ const params = {
 
 // const material = new THREE.MeshBasicMaterial({ color: "#00ff00" });
 // 创建着色器材质
-const rawShaderMaterial = new THREE.RawShaderMaterial({
-  vertexShader: deepVertexShader,
-  fragmentShader: deepFragmentShader,
-  side: THREE.DoubleSide,
-  uniforms: {
-    uTime: {
-      value: 0,
-    },
-    uTexture: {
-      value: texture,
-    },
-  },
+const shaderMaterial = new THREE.ShaderMaterial({
+  vertexShader: `
+        void main(){
+            gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4( position, 1.0 ) ;
+        }
+    `,
+  fragmentShader: `
+        void main(){
+            gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+        }
+  `,
 })
 
 // 创建平面
 const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(1, 1, 64, 64),
-  rawShaderMaterial
+  new THREE.PlaneBufferGeometry(1, 1, 64, 64),
+  shaderMaterial
 )
 
 console.log(floor)
@@ -109,7 +108,6 @@ controls.enableDamping = true
 const clock = new THREE.Clock()
 function animate(t) {
   const elapsedTime = clock.getElapsedTime()
-  rawShaderMaterial.uniforms.uTime.value = elapsedTime
   //   console.log(elapsedTime);
   requestAnimationFrame(animate)
   // 使用渲染器渲染相机看这个场景的内容渲染出来
